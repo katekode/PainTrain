@@ -1,0 +1,53 @@
+body {
+    margin: 0px 100px;
+    background: mediumslateblue;
+}
+
+.jumbotron {
+    text-align: center;
+}
+
+.input {
+    margin-left: 90px;
+    margin-right: 90px;
+}
+
+.display-4 {
+    color: white;
+    font-weight: bolder;
+}
+
+.lead {
+    font-weight: bolder;
+}
+
+.table {
+    background-color: rgb(11, 133, 82);
+}
+
+.m-3 {
+    background-color: lightgoldenrodyellow;
+    text-align: center;
+}
+
+.containerTrain {
+    border: 12px solid black;
+    border-radius: 10px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.m-4 {
+    text-align: center;
+    background-color: palevioletred;
+    padding: 30px;
+}
+
+.btn {
+    background-color: black;
+    border: black;
+}
+
+#trainSchedule {
+    font-weight: bold;
+}

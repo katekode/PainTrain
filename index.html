@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Champagne</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="style.css">
+
+    <script src=" https://code.jquery.com/jquery-3.3.1.slim.min.js " integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo " crossorigin="anonymous "></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js " integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1 " crossorigin="anonymous "></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js " integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM " crossorigin="anonymous "></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js "></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.js " integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin=" anonymous "></script>
+</head>
+
+<body>
+    <div class="jumbotron jumbotron-fluid bg-dark ">
+        <div class="container">
+            <h1 class="display-4 ">One Way Trains to Paradise</h1>
+            <p class="lead ">Buy now. Your time is running out</p>
+        </div>
+    </div>
+
+    <h3 class="m-4">Train Schedule</h3>
+    <br>
+
+    <table class="table table-dark " id="trainSchedule">
+        <thead>
+            <tr>
+                <th scope="col ">Train Name</th>
+                <th scope="col ">Destination</th>
+                <th scope="col ">Frequency</th>
+                <th scope="col ">Next Train Arrival</th>
+                <th scope="col ">Minutes From Now</th>
+            </tr>
+
+
+        </thead>
+
+        <tbody id="train-list ">
+
+        </tbody>
+
+    </table>
+    <div class="containerTrain">
+        <h3 class="m-3"> Add a Train </h3>
+        <br>
+
+        <div class="input ">
+            <form>
+                <div class="form-group ">
+                    <label for="formGroupExampleInput ">Train Name</label>
+                    <input type="text " class="form-control " id="name " placeholder="Example input ">
+                </div>
+                <div class="form-group ">
+                    <label for="formGroupExampleInput ">Destination</label>
+                    <input type="text " class="form-control " id="destination " placeholder="Example input ">
+                </div>
+                <div class="form-group ">
+                    <label for="formGroupExampleInput ">First Train Time (Military)</label>
+                    <input type="text " class="form-control " id="firstTrain " placeholder="Example input ">
+                </div>
+                <div class="form-group ">
+                    <label for="formGroupExampleInput "> Frequency (Minutes) </label>
+                    <input type="text " class="form-control " id="href " placeholder="Example input ">
+                </div>
+            </form>
+
+
+            <button type="submit " class="btn btn-primary " id="addTrain ">Submit</button>
+
+        </div>
+    </div>
+    <script src="https://www.gstatic.com/firebasejs/6.1.1/firebase-app.js "></script>
+    <!--<script src="https://www.gstatic.com/firebasejs/3.1.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/3.1.0/firebase-database.js"></script>
+
+     https://firebase.google.com/docs/web/setup#config-web-app -->
+
+    <script>
+        var config = {
+            apiKey: "AIzaSyC-3RR6M5KA_cPkVBrdo-1Win3mGUhYULw ",
+            authDomain: "thepaintrain-7a1f3.firebaseapp.com ",
+            databaseURL: "https://thepaintrain-7a1f3.firebaseio.com ",
+            projectId: "thepaintrain-7a1f3 ",
+            storageBucket: "thepaintrain-7a1f3.appspot.com ",
+            messagingSenderId: "521486675475 ",
+            //appId: "1:521486675475:web:bb6e52991ad2682e "
+        };
+        // Initialize Firebase
+        firebase.initializeApp(config);
+
+        //var database = firebase.database();
+
+        $("#addTrain ").on("click ", function(event) {
+            event.preventDefault();
+
+            var trainName = $("#name ")
+                .val().trim();
+
+            var destination = $("#destination ")
+                .val().trim();
+
+            var firstTrain = $("#firstTrain ")
+                .val().trim();
+
+            var frequency = $("#frequency ")
+                .val().trim();
+
+            var tempTrain = {
+                name: trainName,
+                destination: destination,
+                firstTrain: firstTrain,
+                frequency: frequency,
+            };
+
+            database.ref().push(tempTrain);
+
+            console.log("The following values were pushed to the firebase ");
+            console.log(tempTrain.name);
+            console.log(tempTrain.destination);
+            console.log(tempTrain.firstTrain);
+            console.log(tempTrain.frequency);
+
+            alert("Train Successfully Added ");
+
+
+            $("#name ").val("");
+            $("#destination ").val("");
+            $("#firstTrain ").val("");
+            $("#frequency ").val("");
+
+        });
+
+        database.ref().on("child_added", function(snapshot, prevChildKey) {
+            console.log(snapshot.val());
+
+            var snapName = snapshot.val().name;
+            var snapDestination = snapshot.val().destination;
+            var snapFirstTrain = snapshot.val().firstTrain;
+            var snapFrequency = snapshot.val().frequency;
+
+            var timeArr = snapFirstTrain.split(":");
+            var trainTime = moment().hours(timeArr[0]).minutes(timeArr[1]);
+
+            var maxMoment = moment.max(moment(), trainTime);
+            var tMinutes;
+            var tArrival;
+
+            if (maxMoment === trainTime) {
+                tArrival = trainTime.format("hh:mm A")
+                tMinutes = trainTime.diff(moment(), "minutes");
+            } else {
+
+                var differenceTimes = moment().diff(trainTime, "minutes");
+                var tRemainder = differenceTimes % snapFrequency;
+                tMinutes = snapFrequency - tReminder;
+
+                tArrival = moment()
+                    .add(tMinutes, "m ")
+                    .format("hh:mm A " ());
+
+            }
+
+            console.log("tMinutes: ", tMinutes);
+            console.log("tArrival: " + tArrival);
+
+            $("#train-list").append(` 
+                    <tr>
+                        <th scope = "row" > $(snapName) </th>  
+                        <td> $(snapDestination) </td>  
+                        <td> $(snapFrequency) </td>  
+                            <td> $(tArrival) </td>  
+                            <td> $(tMinutes) </td>  
+                            < /tr>
+                        `)
+
+        });
+    </script>
+
+
+
+
+</body>
+
+</html>
